@@ -125,3 +125,4 @@ if __name__ == "__main__":
     assert names3.first == "charlie"
     assert (names3.first, list(names3.rest)) == ("charlie", ["bob", "alice"])
     print "passed!"
+    print

@@ -29,12 +29,12 @@ def Record(*slots):
 class RecordBase(tuple):
     SLOTS = ()
 
-    ## overide this one instead of __init__
+    # # overide this one instead of __init__
     def __new__(cls, *values):
         assert len(values) == len(cls.SLOTS)
         return tuple.__new__(cls, values)
 
-    ## use this when overriding __new__
+    # # use this when overriding __new__
     @classmethod
     def new(cls, *values):
         assert len(values) == len(cls.SLOTS)
@@ -43,7 +43,7 @@ class RecordBase(tuple):
     def __iter__(self):
         return islice(tuple.__iter__(self), len(self.SLOTS))
 
-    ## use this when overriding __iter__
+    # # use this when overriding __iter__
     @property
     def values(self):
         return islice(tuple.__iter__(self), len(self.SLOTS))
@@ -65,7 +65,7 @@ class RecordBase(tuple):
         return cls.from_dict(dict(named_values))
 
     @classmethod
-    def from_dict(cls, dct, default = None):
+    def from_dict(cls, dct, default=None):
         return cls.new(*(dct.get(slot, default) for slot in cls.SLOTS))
         
 
@@ -78,7 +78,7 @@ class RecordBase(tuple):
                           in enumerate(self.values)))
 
 
-    ## setting up getters and setters
+    # # setting up getters and setters
     @classmethod
     def set_slots(cls, slots):
         cls.SLOTS = slots
@@ -94,7 +94,7 @@ class RecordBase(tuple):
     def make_setter(cls, index):
         return lambda self, value: self.set_by_index(index, value)
 
-    ## for Pickling
+    # # for Pickling
 
     def __getnewargs__(self):
         return self
@@ -104,7 +104,7 @@ def upper_first(string):
     
 
 class LinkedList(Record("first", "rest")):
-    def __new__(cls, first, rest = None):
+    def __new__(cls, first, rest=None):
         return cls.new(first, rest)
 
     def __getitem__(self, index):
@@ -122,7 +122,7 @@ class LinkedList(Record("first", "rest")):
 
 if __name__ == "__main__":
     # tests
-    def err(code, err_type = Exception):
+    def err(code, err_type=Exception):
         try:
             code()
         except err_type, error:
@@ -131,30 +131,30 @@ if __name__ == "__main__":
     class Person(Record("name", "age")):
         pass
 
-    name   = "peter"
-    age    = 25
+    name = "peter"
+    age = 25
 
-    peter  = Person(name, age)
-    assert peter.name          == name 
-    assert peter[0]            == name 
-    assert peter.age           == age
-    assert peter[1]            == age
+    peter = Person(name, age)
+    assert peter.name == name 
+    assert peter[0] == name 
+    assert peter.age == age
+    assert peter[1] == age
     assert tuple(peter.values) == (name, age)
-    assert tuple(peter)        == (name, age)
+    assert tuple(peter) == (name, age)
     assert list(peter.named_values) == [("name", name), ("age", age)]
-    assert peter               == Person("peter", 25)
-    assert repr(peter)         == "Person('peter', 25)"
-    assert peter               == Person.from_named_values(peter.named_values)
-    assert peter               == Person.from_dict(dict(peter.named_values))
+    assert peter == Person("peter", 25)
+    assert repr(peter) == "Person('peter', 25)"
+    assert peter == Person.from_named_values(peter.named_values)
+    assert peter == Person.from_dict(dict(peter.named_values))
     assert err(lambda : peter.height, AttributeError)
-    assert err(lambda : peter[2],     IndexError)
+    assert err(lambda : peter[2], IndexError)
     assert err(lambda : Person())
     assert err(lambda : Person("peter"))
 
-    assert peter.alter(age = 29) == Person(name, 29)
-    assert peter.set_age(29)    == Person(name, 29)
-    assert peter.alter(name = "grandpa", age = 99) == Person("grandpa", 99)
-    assert peter.set_name("grandpa").set_age(99)   == Person("grandpa", 99)
+    assert peter.alter(age=29) == Person(name, 29)
+    assert peter.set_age(29) == Person(name, 29)
+    assert peter.alter(name="grandpa", age=99) == Person("grandpa", 99)
+    assert peter.set_name("grandpa").set_age(99) == Person("grandpa", 99)
 
     def iget(itr, index):
         try:
@@ -166,17 +166,17 @@ if __name__ == "__main__":
             raise IndexError
     
                     
-    names1  = LinkedList("alice")
-    names2  = names1.cons("bob")
+    names1 = LinkedList("alice")
+    names2 = names1.cons("bob")
     names2z = names1.cons("zed")
-    names3  = names2.cons("charlie")
+    names3 = names2.cons("charlie")
 
-    assert list(names1)  == ["alice"]
-    assert list(names2)  == ["bob", "alice"]
+    assert list(names1) == ["alice"]
+    assert list(names2) == ["bob", "alice"]
     assert list(names2z) == ["zed", "alice"]
-    assert list(names3)  == ["charlie", "bob", "alice"]
-    assert names3[1]     == "bob"
-    assert names3[0]     == "charlie"
+    assert list(names3) == ["charlie", "bob", "alice"]
+    assert names3[1] == "bob"
+    assert names3[0] == "charlie"
     assert err(lambda : names3[3], IndexError)
 
     assert (names3.first, list(names3.rest)) == ("charlie", ["bob", "alice"])

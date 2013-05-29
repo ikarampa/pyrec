@@ -21,10 +21,10 @@ print EasySalutationMessage("Hello", "World")
 # step 3. Learn to use set_xyz() and alter()
 
 class MessageToWorld(EasySalutationMessage):
-    def __new__(cls, salutation = "Hello", recipient = "World"):
+    def __new__(cls, salutation="Hello", recipient="World"):
         return cls.new(salutation, recipient)
 
 print MessageToWorld("Goodbye").set_recipient("Nation")
-print MessageToWorld("Goodbye", "Nation").alter(salutation = "Hello", recipient = "World")
+print MessageToWorld("Goodbye", "Nation").alter(salutation="Hello", recipient="World")
 
 
